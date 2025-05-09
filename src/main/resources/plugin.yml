@@ -1,0 +1,14 @@
+name: PlanetLib
+version: '${project.version}'
+main: cn.jason31416.planetlib.PlanetLib
+api-version: '1.20'
+depend:
+  - Vault
+authors:
+  - Jason31416
+description: A simple library for Jason31416's plugins!
+
+commands:
+  planetlib:
+    description: PlanetLib API command, usually doesn't need to be used by players.
+    aliases: [plib]
