@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib.wrapper;
 
+import cn.jason31416.planetlib.PlanetLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public record SimpleLocation(double x, double y, double z, SimpleWorld world) implements ConfigurationSerializable {
     public SimpleLocation getRelative(double dx, double dy, double dz) {
@@ -41,6 +43,14 @@ public record SimpleLocation(double x, double y, double z, SimpleWorld world) im
 
     public static SimpleLocation of(double x, double y, double z, SimpleWorld world) {
         return new SimpleLocation(x, y, z, world);
+    }
+
+    public CompletableFuture<Block> getLoadedBlock() {
+        CompletableFuture<Block> ret = new CompletableFuture<>();
+        PlanetLib.getScheduler().runAtLocation(getBukkitLocation(), task->{
+            ret.complete(getBlock());
+        });
+        return ret;
     }
 
     public Material getBlockMaterial() {

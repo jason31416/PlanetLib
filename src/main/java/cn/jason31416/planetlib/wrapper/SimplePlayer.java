@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib.wrapper;
 
+import cn.jason31416.planetlib.PlanetLib;
 import cn.jason31416.planetlib.hook.VaultHook;
 import cn.jason31416.planetlib.message.Message;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public record SimplePlayer(OfflinePlayer offlinePlayer) implements ConfigurationSerializable {
     public String getName() {
@@ -61,6 +63,10 @@ public record SimplePlayer(OfflinePlayer offlinePlayer) implements Configuration
             return false;
         }
         return offlinePlayer.getUniqueId().equals(other.offlinePlayer.getUniqueId());
+    }
+
+    public CompletableFuture<Boolean> teleport(SimpleLocation location){
+        return PlanetLib.getScheduler().teleportAsync(getPlayer(), location.getBukkitLocation());
     }
 
     public int hashCode() {
