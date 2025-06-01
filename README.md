@@ -56,4 +56,4 @@ You should also shade the lib into another location to avoid conflicts via the m
 
 ## Wiki
 
-For more information please check out the [wiki](https://bgithub.xyz/jason31416/planetlib/wiki)
+For more information please check out the [wiki](https://github.com/jason31416/planetlib/wiki)
