@@ -2,7 +2,6 @@
 
 A lightweight Java library for Bukkit plugin development, designed to simplify common tasks including message files, data storage, command handling, GUIs, and more.
 
-![GitHub](https://img.shields.io/github/license/jason31416/planetlib)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/jason31416/planetlib)
 
 ## Features
