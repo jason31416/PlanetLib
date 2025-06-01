@@ -1,4 +1,4 @@
-# Planetlib :rocket:
+# PlanetLib
 
 A lightweight Java library for Bukkit plugin development, designed to simplify common tasks including message files, data storage, command handling, GUIs, and more.
 
@@ -54,4 +54,6 @@ You should also shade the lib into another location to avoid conflicts via the m
 
 ---
 
-## Basic usages
+## Wiki
+
+For more information please check out the [wiki](https://bgithub.xyz/jason31416/planetlib/wiki)
