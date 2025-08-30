@@ -1,7 +1,9 @@
 package cn.jason31416.planetlib;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
@@ -69,6 +72,22 @@ public class Util {
             }
         } else {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
+        }
+    }
+
+    @SafeVarargs
+    public static <T> @Nullable T getFirstNonnullOne(T... objs) {
+        for(T obj : objs)
+            if(obj != null)
+                return obj;
+        return null;
+    }
+
+    public static @Nullable Integer tryParseInt(@NotNull String st) {
+        try {
+            return Integer.parseInt(st);
+        } catch(NumberFormatException ignored) {
+            return null;
         }
     }
 }

@@ -2,6 +2,7 @@ package cn.jason31416.planetlib.message;
 
 import cn.jason31416.planetlib.wrapper.SimplePlayer;
 import cn.jason31416.planetlib.wrapper.SimpleSender;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ public interface Message {
     default void sendActionbar(SimplePlayer player){
         if(player.getPlayer() != null) sendActionbar(player.getPlayer());
     }
+    Component toComponent();
     default void broadcast(){
         for(Player player : Bukkit.getOnlinePlayers()){
             send(player);

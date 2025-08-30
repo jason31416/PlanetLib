@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib.message;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,6 +27,11 @@ public class MessageList implements Message {
     @Override
     public void sendActionbar(Player sender) {
         throw new UnsupportedOperationException("Cannot send list as actionbar!");
+    }
+
+    @Override
+    public Component toComponent() {
+        return new StringMessage(String.join("\n", content)).toComponent();
     }
 
     public List<String> asList() {

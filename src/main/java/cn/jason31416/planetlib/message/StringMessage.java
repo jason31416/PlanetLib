@@ -45,6 +45,9 @@ public class StringMessage implements Message {
     public String toFormatted(){
         return MiniMessage.miniMessage().serialize(MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, null)));
     }
+    public Component toComponent(){
+        return MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, null));
+    }
     public void send(CommandSender player){
         Component component = MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, null));
         if(player instanceof Player pl) pl.spigot().sendMessage(BungeeComponentSerializer.get().serialize(component));

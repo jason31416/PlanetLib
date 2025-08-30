@@ -1,8 +1,12 @@
 package cn.jason31416.planetlib.hook;
 
 import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Collection;
+import java.util.Set;
 
 public class NbtHook {
     public static boolean hasTag(ItemStack item, String tag) {
@@ -46,5 +50,9 @@ public class NbtHook {
     }
     public static String getTag(Entity entity, String tag){
         return NBT.get(entity, nbt->(String)nbt.getString(tag));
+    }
+
+    public static Set<String> getTags(ItemStack item) {
+        return NBT.get(item, ReadableNBT::getKeys);
     }
 }

@@ -7,4 +7,7 @@ public interface DataList<T> {
     List<T> getAllData();
     boolean serialize(Object data, IDataItem dataItem);
     T deserialize(IDataItem dataItem);
+    default List<String> getTableKeys(){
+        return null;
+    };
 }

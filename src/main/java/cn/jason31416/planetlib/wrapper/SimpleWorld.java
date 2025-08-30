@@ -5,7 +5,7 @@ import org.bukkit.World;
 
 import java.util.UUID;
 
-public class SimpleWorld {
+public final class SimpleWorld {
     private final World world;
     public SimpleWorld(World world) {
         this.world = world;

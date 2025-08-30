@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib.message;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,6 +25,9 @@ public enum StaticMessages implements Message {
     }
     public String toString(){
         return message.toString();
+    }
+    public Component toComponent(){
+        return message.toComponent();
     }
 
     @Override
