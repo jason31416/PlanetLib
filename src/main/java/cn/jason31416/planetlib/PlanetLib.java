@@ -4,6 +4,7 @@ import cn.jason31416.planetlib.gui.GUIEventHandler;
 import cn.jason31416.planetlib.hook.BlueMapHook;
 import cn.jason31416.planetlib.hook.VaultHook;
 import cn.jason31416.planetlib.message.StringMessage;
+import cn.jason31416.planetlib.util.Config;
 import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import de.tr7zw.changeme.nbtapi.NBT;
@@ -36,12 +37,25 @@ public class PlanetLib extends JavaPlugin {
         if(requirements.contains(Required.BLUEMAP)) BlueMapHook.init();
         if(requirements.contains(Required.NBT)) NBT.preloadApi();
 
+        plugin.saveDefaultConfig();
+        Config.start(plugin);
+
         foliaLib = new FoliaLib(plugin);
         instance.getServer().getPluginManager().registerEvents(new GUIEventHandler(), plugin);
     }
     @Override
     public void onDisable(){
         disable();
+    }
+
+    public static void info(String message){
+        PluginLogger.info(message);
+    }
+    public static void warning(String message){
+        PluginLogger.warning(message);
+    }
+    public static void error(String message){
+        PluginLogger.error(message);
     }
 
     public static void disable(){

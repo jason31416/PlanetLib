@@ -1,6 +1,6 @@
-package cn.jason31416.planetlib;
+package cn.jason31416.planetlib.util;
 
-import org.jetbrains.annotations.Contract;
+import cn.jason31416.planetlib.PlanetLib;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 

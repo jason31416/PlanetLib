@@ -1,7 +1,6 @@
 package cn.jason31416.planetlib.util;
 
 import cn.jason31416.planetlib.PlanetLib;
-import cn.jason31416.planetlib.Util;
 import cn.jason31416.planetlib.hook.NbtHook;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
