@@ -1,5 +1,6 @@
-package cn.jason31416.planetlib;
+package cn.jason31416.planetlib.util;
 
+import cn.jason31416.planetlib.PlanetLib;
 import cn.jason31416.planetlib.message.Message;
 import org.bukkit.Bukkit;
 

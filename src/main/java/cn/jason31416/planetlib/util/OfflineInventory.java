@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("DataFlowIssue")
+@Deprecated
 public class OfflineInventory implements Inventory, AutoCloseable {
     private final NBTFile nbt;
     private final Map<Integer, ItemStack> itemMap = new ConcurrentHashMap<>();
