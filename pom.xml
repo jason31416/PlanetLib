@@ -6,7 +6,7 @@
 
     <groupId>cn.jason31416</groupId>
     <artifactId>PlanetLib</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
 
     <build>
         <plugins>
@@ -55,10 +55,6 @@
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
                             <shadedPattern>cn.jason31416.lib.folialib</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.zaxxer.hikari</pattern>
-                            <shadedPattern>cn.jason31416.lib.hikari</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -165,23 +161,6 @@
             <artifactId>FoliaLib</artifactId>
             <version>0.5.1</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>5.1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.18</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.50.3.0</version>
         </dependency>
     </dependencies>
 </project>

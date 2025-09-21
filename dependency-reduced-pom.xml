@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cn.jason31416</groupId>
   <artifactId>PlanetLib</artifactId>
-  <version>1.2.4</version>
+  <version>1.2.6</version>
   <build>
     <resources>
       <resource>
@@ -51,10 +51,6 @@
             <relocation>
               <pattern>com.tcoded.folialib</pattern>
               <shadedPattern>cn.jason31416.lib.folialib</shadedPattern>
-            </relocation>
-            <relocation>
-              <pattern>com.zaxxer.hikari</pattern>
-              <shadedPattern>cn.jason31416.lib.hikari</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
