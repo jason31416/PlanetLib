@@ -16,11 +16,11 @@ public class Lang {
         messageLoader = new MessageLoader(new File(PlanetLib.instance.getDataFolder(), fileName));
     }
 
-    public Message getMessage(String key){
+    public static Message getMessage(String key){
         return messageLoader.getMessage(key, "&c"+key);
     }
 
-    public MessageList getMessageList(String key){
+    public static MessageList getMessageList(String key){
         return new MessageList(messageLoader.getList(key, new ArrayList<>()));
     }
 }
