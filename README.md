@@ -2,12 +2,12 @@
 
 A lightweight Java library for Bukkit plugin development, designed to simplify common tasks including message files, data storage, command handling, GUIs, and more.
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/jason31416/planetlib)
+[![](https://jitpack.io/v/jason31416/planetlib.svg)](https://jitpack.io/#jason31416/planetlib)
 
 ## Features
 
 ### Core Features
-- **Data Storage**Simple utilities for permanent storage (YAML format only for now).
+- **Data Storage** – Simple utilities for permanent storage (YAML format only for now).
 - **Inventory GUI** – Highly configurable inventory GUI creations.
 - **Multi-Language Support** – Load language files and manage in-game messages.
 - **Command System** – Simplified command registration with auto-completion.
