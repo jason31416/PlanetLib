@@ -43,7 +43,7 @@ public class GUIEventHandler implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event){
         if (event.getInventory().getHolder() instanceof GUI gui) {
-            GUISession.getSessions().remove(gui.getPlayer());
+            gui._close();
         }
     }
 

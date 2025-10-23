@@ -97,7 +97,8 @@ public class SimpleItemStack {
         ItemMeta meta = item.getItemMeta();
         if(meta!= null){
             meta.displayName(name.toComponent());
-            meta.setLore(lore.asList());
+            if(lore != null)
+                meta.setLore(lore.asList());
             if(glow){
                 meta.addEnchant(Enchantment.UNBREAKING, 1, true);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -129,7 +130,8 @@ public class SimpleItemStack {
         item.name = name.copy();
         item.quantity = quantity;
         item.material = material;
-        item.lore = lore.copy();
+        if(lore!=null)
+            item.lore = lore.copy();
         item.customModelData = customModelData;
         item.skullId = skullId;
         item.glow = glow;

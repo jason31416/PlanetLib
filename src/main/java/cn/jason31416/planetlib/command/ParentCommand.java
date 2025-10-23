@@ -32,7 +32,7 @@ public abstract class ParentCommand implements ICommand, IParentCommand {
         return executeRaw(context);
     }
     public List<String> tabComplete(ICommandContext context) {
-        if(context.args().size() == 1) {
+        if(context.args().size() <= 1) {
             List<String> result = new ArrayList<>();
             for (String key : subCommands.keySet()) {
                 if (key.startsWith(context.getArg(0))) {
@@ -44,7 +44,7 @@ public abstract class ParentCommand implements ICommand, IParentCommand {
             ICommand subCommand = subCommands.get(context.getArg(0));
             return subCommand.tabComplete(context.getSubContext());
         }else{
-            return null;
+            return List.of();
         }
     }
     public void registerSubCommand(String name, ICommand command){

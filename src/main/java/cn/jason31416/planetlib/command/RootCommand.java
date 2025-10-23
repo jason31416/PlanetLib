@@ -22,6 +22,7 @@ public abstract class RootCommand implements ICommand, IParentCommand {
     @Getter
     public Map<String, ICommand> subCommands = new HashMap<>();
     String name;
+    List<String> aliases = List.of();
     boolean registered=false;
     public RootCommand(String name) {
         this.name = name;
@@ -29,7 +30,7 @@ public abstract class RootCommand implements ICommand, IParentCommand {
     public void register(){
         if(registered) return;
         PlanetLib.instance.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(name, new BasicCommand() {
+            commands.registrar().register(name, aliases, new BasicCommand() {
                 @Override
                 public void execute(CommandSourceStack commandSourceStack, String[] args) {
                     onCommand(commandSourceStack.getSender(), args);
@@ -61,7 +62,7 @@ public abstract class RootCommand implements ICommand, IParentCommand {
     @Nullable
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull String[] strings){
         if(strings.length == 0){
-            return null;
+            return List.of();
         }
         CommandContext context = new CommandContext(Arrays.asList(strings), SimpleSender.of(commandSender), SimplePlayer.of(commandSender), name);
         return tabComplete(context);
@@ -72,7 +73,7 @@ public abstract class RootCommand implements ICommand, IParentCommand {
     @Nullable
     public abstract Message execute(ICommandContext context);
     public List<String> tabComplete(ICommandContext context) {
-        if(context.args().size()==1) {
+        if(context.args().size()<=1) {
             List<String> result = new ArrayList<>();
             for (String key : subCommands.keySet()) {
                 if (key.startsWith(context.getArg(0))) {
@@ -84,30 +85,48 @@ public abstract class RootCommand implements ICommand, IParentCommand {
             ICommand subCommand = subCommands.get(context.getArg(0));
             return subCommand.tabComplete(context.getSubContext());
         }else{
-            return null;
+            return List.of();
         }
     }
 
+    public static Builder builder(String name){
+        return new Builder(name);
+    }
+
+    /**
+     * A builder approach to create a command tree.
+     * Doesn't require plugin.yml registering.
+     * @since 1.3
+     */
     public static class Builder {
         private Function<ICommandContext, Message> directExecutor;
         private String name;
-        private Map<String, Pair<Function<ICommandContext, Message>, Function<ICommandContext, List<String>>>> subNodeCommands;
-        private Map<String, Function<ICommandContext, Message>> subParentCommands;
+        private List<String> aliases = new ArrayList<>();
+        private Map<String, Pair<Function<ICommandContext, Message>, Function<ICommandContext, List<String>>>> subNodeCommands=new HashMap<>();
+        private Map<String, Function<ICommandContext, Message>> subParentCommands=new HashMap<>();
 
         public Builder(String name){
             this.name = name;
         }
-        public void setDirectExecutor(Function<ICommandContext, Message> ex){
+        public Builder addAlias(String alias){
+            aliases.add(alias);
+            return this;
+        }
+        public Builder setDirectExecutor(Function<ICommandContext, Message> ex){
             directExecutor = ex;
+            return this;
         }
-        public void addCommandNode(String path, Function<ICommandContext, Message> ex, Function<ICommandContext, List<String>> tc){
+        public Builder addCommandNode(String path, Function<ICommandContext, Message> ex, Function<ICommandContext, List<String>> tc){
             subNodeCommands.put(path, Pair.of(ex, tc));
+            return this;
         }
-        public void addCommandNode(String path, Function<ICommandContext, Message> ex){
+        public Builder addCommandNode(String path, Function<ICommandContext, Message> ex){
             subNodeCommands.put(path, Pair.of(ex, ctx->null));
+            return this;
         }
-        public void setParentExecutor(String path, Function<ICommandContext, Message> ex){
+        public Builder setParentExecutor(String path, Function<ICommandContext, Message> ex){
             subParentCommands.put(path, ex);
+            return this;
         }
 
         public RootCommand build(){
@@ -117,6 +136,7 @@ public abstract class RootCommand implements ICommand, IParentCommand {
                     return directExecutor.apply(context);
                 }
             };
+            ret.aliases = aliases;
             for(String i: subNodeCommands.keySet()){
                 IParentCommand currentStep=ret;
                 String curPath="";
@@ -133,7 +153,7 @@ public abstract class RootCommand implements ICommand, IParentCommand {
                     if(subParentCommands.containsKey(curPath)){
                         ex = subParentCommands.get(curPath);
                     }else ex=ctx->null;
-                    new ParentCommand(j, currentStep) {
+                    currentStep = new ParentCommand(j, currentStep) {
                         @Override
                         public @Nullable Message executeRaw(ICommandContext context) {
                             return ex.apply(context);

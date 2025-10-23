@@ -1,20 +1,27 @@
 package cn.jason31416.planetlib.gui;
 
+import cn.jason31416.planetlib.PlanetLib;
 import cn.jason31416.planetlib.hook.NbtHook;
 import cn.jason31416.planetlib.message.Message;
+import cn.jason31416.planetlib.util.PluginLogger;
 import cn.jason31416.planetlib.util.general.Provider;
 import cn.jason31416.planetlib.wrapper.SimpleItemStack;
 import cn.jason31416.planetlib.wrapper.SimplePlayer;
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import lombok.Getter;
+import net.kyori.adventure.util.Ticks;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -41,13 +48,23 @@ public class GUI implements InventoryHolder {
      * GUI content mapping
      */
     @Getter
-    private Map<String, InventoryItem> content;
-    
+    private final Map<String, InventoryItem> content = new HashMap<>();
+
+    @Getter
+    private final String id;
+
+    @Getter
+    private int refreshInterval=-1;
+
+    private Runnable onCloseRunnable = null;
+
     /**
      * The session that requested this GUI
      */
     @Getter
     private GUISession session;
+
+    private WrappedTask refreshTask=null;
 
     /**
      * InventoryItem is a group of items that are exactly the same (e.g. behaves and looks exactly like each other)
@@ -148,9 +165,15 @@ public class GUI implements InventoryHolder {
      * @param size Size of GUI (Can be multiples of 9 or less than 9)
      * @param title The title of the GUI
      */
-    public GUI(int size, Message title){
+    public GUI(String id, int size, Message title){
         inventory = Bukkit.getServer().createInventory(this, size, title.toComponent());
+        this.id = id;
     }
+
+    public void onClose(Runnable onCloseRunnable){
+        this.onCloseRunnable = onCloseRunnable;
+    }
+
     /**
      * Display the GUI to a session. Ideally should only be called by the session.
      *
@@ -159,12 +182,31 @@ public class GUI implements InventoryHolder {
     public void display(GUISession session){
         this.session = session;
         session.player.getPlayer().openInventory(inventory);
+
+        if(refreshInterval > 0 && refreshTask == null){
+            refreshTask = PlanetLib.getScheduler().runTimer(()->{
+                if(session.isClosed()||!getPlayer().isOnline()||getPlayer().getPlayer().getOpenInventory().getTopInventory() != inventory){
+                    refreshTask.cancel();
+                    PluginLogger.warning("Unexpected GUI refresh task cancelled due to session closed or player offline.");
+                    return;
+                }
+                update();
+            }, Ticks.duration(refreshInterval).toMillis(), Ticks.duration(refreshInterval).toMillis(), TimeUnit.MILLISECONDS);
+        }
     }
     /**
      * Fetching the player instance of the GUI.
      */
     public SimplePlayer getPlayer(){
         return session.player;
+    }
+
+    /**
+     * Setting the refreshing interval of the GUI (Must be set before display!).
+     */
+    public GUI refresh(int interval){
+        this.refreshInterval = interval;
+        return this;
     }
 
     /**
@@ -189,6 +231,24 @@ public class GUI implements InventoryHolder {
     private ItemStack putNbt(ItemStack item){
         NbtHook.addTag(item, "plib.guiItem");
         return item;
+    }
+
+    public void close(){
+        _close();
+        session.player.getPlayer().closeInventory();
+    }
+
+    @ApiStatus.Internal
+    protected void _close(){
+        if(onCloseRunnable != null){
+            onCloseRunnable.run();
+        }
+        if(refreshTask != null){
+            refreshTask.cancel();
+        }
+        if(session != null){
+            session.close();
+        }
     }
 
     /**
