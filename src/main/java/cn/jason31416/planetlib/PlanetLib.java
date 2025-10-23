@@ -9,7 +9,6 @@ import cn.jason31416.planetlib.util.PluginLogger;
 import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import de.tr7zw.changeme.nbtapi.NBT;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,7 +28,6 @@ public class PlanetLib extends JavaPlugin {
     }
     public static void initialize(JavaPlugin plugin, Required... require) {
         instance=plugin;
-        StringMessage.bukkitAudiences = BukkitAudiences.create(plugin);
         StringMessage.miniMessage = MiniMessage.miniMessage();
 
         Set<Required> requirements = Arrays.stream(require).collect(Collectors.toSet());
@@ -60,6 +58,5 @@ public class PlanetLib extends JavaPlugin {
     }
 
     public static void disable(){
-        StringMessage.bukkitAudiences.close();
     }
 }

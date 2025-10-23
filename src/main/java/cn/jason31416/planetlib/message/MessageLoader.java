@@ -1,7 +1,6 @@
 package cn.jason31416.planetlib.message;
 
 import cn.jason31416.planetlib.PlanetLib;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

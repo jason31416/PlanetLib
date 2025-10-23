@@ -1,16 +1,13 @@
 package cn.jason31416.planetlib.message;
 
 import cn.jason31416.planetlib.wrapper.SimplePlayer;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class StringMessage implements Message {
-    public static BukkitAudiences bukkitAudiences;
     public static MiniMessage miniMessage;
     String content;
     public StringMessage(String content) {
@@ -45,16 +42,21 @@ public class StringMessage implements Message {
     public String toFormatted(){
         return MiniMessage.miniMessage().serialize(MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, null)));
     }
+
+    @Override
+    public Message copy() {
+        return new StringMessage(content);
+    }
+
     public Component toComponent(){
         return MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, null));
     }
     public void send(CommandSender player){
         Component component = MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, null));
-        if(player instanceof Player pl) pl.spigot().sendMessage(BungeeComponentSerializer.get().serialize(component));
-        else player.sendMessage(LegacyComponentSerializer.legacySection().serialize(component));
+        player.sendMessage(component);
     }
     public void sendActionbar(Player player){
-        bukkitAudiences.player(player).sendActionBar(MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, SimplePlayer.of(player))));
+        player.sendActionBar(MiniMessage.miniMessage().deserialize(InternalPlaceholder.replacePlaceholders(content, SimplePlayer.of(player))));
     }
     public boolean equals(Object obj){
         if(obj instanceof StringMessage){

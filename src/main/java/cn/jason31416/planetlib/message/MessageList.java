@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib.message;
 
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageList implements Message {
+    @Getter
     private final List<String> content;
     public MessageList(List<String> content) {
         this.content = content;
@@ -15,6 +17,11 @@ public class MessageList implements Message {
     public MessageList add(String placeholder, Object value){
         content.replaceAll(s -> s.replace("%"+placeholder+"%", value.toString()));
         return this;
+    }
+
+    @Override
+    public MessageList copy() {
+        return new MessageList(new ArrayList<>(content));
     }
 
     @Override

@@ -1,7 +1,7 @@
 name: PlanetLib
 version: '${project.version}'
 main: cn.jason31416.planetlib.PlanetLib
-api-version: '1.20'
+api-version: '1.13'
 depend:
   - Vault
 authors:

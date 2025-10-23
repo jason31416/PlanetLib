@@ -26,6 +26,12 @@ public enum StaticMessages implements Message {
     public String toString(){
         return message.toString();
     }
+
+    @Override
+    public Message copy() {
+        return new StringMessage(message.toString());
+    }
+
     public Component toComponent(){
         return message.toComponent();
     }
