@@ -1,7 +1,10 @@
 package cn.jason31416.planetlib.wrapper;
 
+import cn.jason31416.planetlib.PlanetLib;
+import cn.jason31416.planetlib.hook.PAPIHook;
 import cn.jason31416.planetlib.message.Message;
 import cn.jason31416.planetlib.message.MessageList;
+import cn.jason31416.planetlib.message.StringMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -19,7 +22,6 @@ import java.util.*;
 public class SimpleItemStack {
     public Message name=Message.of("");
     public int quantity=1;
-    public int slot=0;
     public boolean glow=false;
     public Map<Enchantment, Integer> enchantments=null;
     public int customModelData=-1;
@@ -68,10 +70,6 @@ public class SimpleItemStack {
         this.lore = lore;
         return this;
     }
-    public SimpleItemStack setSlot(int slot) {
-        this.slot = slot;
-        return this;
-    }
     public SimpleItemStack setGlow(boolean glow){
         this.glow = glow;
         return this;
@@ -88,6 +86,14 @@ public class SimpleItemStack {
         name = name.add(placeholder, value);
         if(lore != null){
             lore.add(placeholder, value);
+        }
+        return this;
+    }
+    public SimpleItemStack papi(SimplePlayer player){
+        if(!PlanetLib.isPAPIEnabled) return this;
+        name = Message.of(PAPIHook.replace(player, name.toFormatted()));
+        if(lore != null){
+            lore.getContent().replaceAll(text -> PAPIHook.replace(player, text));
         }
         return this;
     }

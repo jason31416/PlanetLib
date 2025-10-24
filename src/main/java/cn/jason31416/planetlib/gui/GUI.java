@@ -170,17 +170,36 @@ public class GUI implements InventoryHolder {
         this.id = id;
     }
 
+    /**
+     * Setting the session of the GUI. This is used to get the player instance.
+     * @param session The session that requested this GUI
+     *
+     * @return this GUI instance
+     * @since 1.3.1
+     */
+    public GUI setSession(GUISession session){
+        this.session = session;
+        return this;
+    }
+
     public void onClose(Runnable onCloseRunnable){
         this.onCloseRunnable = onCloseRunnable;
     }
 
     /**
-     * Display the GUI to a session. Ideally should only be called by the session.
-     *
+     * Setting the session & displaying the GUI.
      * @param session The session that requested this GUI
      */
     public void display(GUISession session){
-        this.session = session;
+        setSession(session);
+        display();
+    }
+
+    /**
+     * Display the GUI to a session. Ideally should only be called by the session.
+     */
+    public void display(){
+        if(session==null) throw new IllegalStateException("Session is not set.");
         session.player.getPlayer().openInventory(inventory);
 
         if(refreshInterval > 0 && refreshTask == null){
@@ -255,6 +274,7 @@ public class GUI implements InventoryHolder {
      * Refreshing the GUI.
      */
     public void update(){
+        if(session==null) throw new IllegalStateException("Session is not set.");
         inventory.clear();
         clickHandlers.clear();
         for (var entry : content.entrySet()) {
@@ -265,6 +285,7 @@ public class GUI implements InventoryHolder {
                 for (String p : item.placeholders.keySet()) {
                     stack.placeholder(p, item.placeholders.get(p).get());
                 }
+                stack.papi(getPlayer());
                 bstack = putNbt(stack.toBukkitItem());
             }
             List<Integer> slots = item.slots;

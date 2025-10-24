@@ -41,6 +41,14 @@ public class MessageList implements Message {
         return new StringMessage(String.join("\n", content)).toComponent();
     }
 
+    public void add(String message) {
+        content.add(message);
+    }
+
+    public void remove(int index) {
+        content.remove(index);
+    }
+
     public List<String> asList() {
         ArrayList<String> list = new ArrayList<>(content);
         list.replaceAll(s -> new StringMessage(s).toString());

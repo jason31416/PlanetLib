@@ -30,10 +30,14 @@ public abstract class GUISession {
         closed = true;
     }
     public void display(GUI gui){
+//        if(currentGUI != null && currentGUI.getInventory().equals(player.getPlayer().getOpenInventory().getTopInventory())){
+//            currentGUI._closeGUI();
+//        }
         sessions.put(player, this);
         setup(gui);
+        gui.setSession(this);
         gui.update();
-        gui.display(this);
+        gui.display();
         currentGUI = gui;
     }
 }

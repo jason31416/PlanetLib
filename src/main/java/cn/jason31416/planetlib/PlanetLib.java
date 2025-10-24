@@ -1,6 +1,8 @@
 package cn.jason31416.planetlib;
 
 import cn.jason31416.planetlib.gui.GUIEventHandler;
+import cn.jason31416.planetlib.gui.clickaction.DefaultClickActions;
+import cn.jason31416.planetlib.gui.clickaction.RegisteredGUIRunnable;
 import cn.jason31416.planetlib.hook.BlueMapHook;
 import cn.jason31416.planetlib.hook.VaultHook;
 import cn.jason31416.planetlib.message.StringMessage;
@@ -10,6 +12,7 @@ import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import de.tr7zw.changeme.nbtapi.NBT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class PlanetLib extends JavaPlugin {
     public static JavaPlugin instance;
     public static FoliaLib foliaLib;
+    public static boolean isPAPIEnabled=false;
     @Override
     public void onEnable() {
         initialize(this);
@@ -35,6 +39,16 @@ public class PlanetLib extends JavaPlugin {
         if(requirements.contains(Required.VAULT)) VaultHook.init();
         if(requirements.contains(Required.BLUEMAP)) BlueMapHook.init();
         if(requirements.contains(Required.NBT)) NBT.preloadApi();
+        if(requirements.contains(Required.PLACEHOLDERAPI)){
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                PlanetLib.instance.getLogger().info("\033[32mHooked into PlaceholderAPI!\033[0m");
+                isPAPIEnabled=true;
+            } else {
+                PlanetLib.instance.getLogger().info("\033[31mFailed to hook PlaceholderAPI!\033[0m");
+            }
+        }
+
+        RegisteredGUIRunnable.registerAll(new DefaultClickActions());
 
         plugin.saveDefaultConfig();
         Config.start(plugin);

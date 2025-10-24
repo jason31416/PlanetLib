@@ -1,5 +1,7 @@
 package cn.jason31416.planetlib.message;
 
+import cn.jason31416.planetlib.PlanetLib;
+import cn.jason31416.planetlib.hook.PAPIHook;
 import cn.jason31416.planetlib.wrapper.SimplePlayer;
 
 import javax.annotation.Nullable;
@@ -15,6 +17,6 @@ public class InternalPlaceholder {
         for(PlaceholderHandler handler : placeholderHandlers){
             message = handler.replacePlaceholders(message, player);
         }
-        return message;
+        return PlanetLib.isPAPIEnabled?PAPIHook.replace(player, message):message;
     }
 }
