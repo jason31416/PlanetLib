@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib.gui;
 
+import cn.jason31416.planetlib.wrapper.SimplePlayer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.event.inventory.InventoryAction;
@@ -12,6 +13,12 @@ public interface GUIRunnable {
         public GUI gui;
         public InventoryClickEvent event;
         public boolean allow;
+        public GUISession getSession(){
+            return gui.getSession();
+        }
+        public SimplePlayer getPlayer(){
+            return gui.getPlayer();
+        }
         public InventoryAction getAction(){
             return event.getAction();
         }

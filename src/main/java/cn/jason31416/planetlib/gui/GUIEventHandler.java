@@ -2,6 +2,7 @@ package cn.jason31416.planetlib.gui;
 
 import cn.jason31416.planetlib.hook.NbtHook;
 import cn.jason31416.planetlib.message.StaticMessages;
+import cn.jason31416.planetlib.util.PluginLogger;
 import cn.jason31416.planetlib.wrapper.SimplePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,7 +38,14 @@ public class GUIEventHandler implements Listener {
         }
         GUIRunnable.RunnableInvocation invocation = new GUIRunnable.RunnableInvocation(gui, event, false);
         gui.getClickHandlers().getOrDefault(event.getSlot(), List.of())
-                .forEach(handler -> handler.run(invocation));
+                .forEach(handler -> {
+                    try {
+                        handler.run(invocation);
+                    }catch (Exception e){
+                        PluginLogger.error("Error occurred while running click handler for GUI " + gui.getId());
+                        e.printStackTrace();
+                    }
+                });
         event.setCancelled(!invocation.allow);
     }
     @EventHandler

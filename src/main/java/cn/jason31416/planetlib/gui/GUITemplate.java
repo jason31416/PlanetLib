@@ -1,7 +1,7 @@
 package cn.jason31416.planetlib.gui;
 
-import cn.jason31416.planetlib.gui.clickaction.ClickHandler;
 import cn.jason31416.planetlib.gui.clickaction.RegisteredGUIRunnable;
+import cn.jason31416.planetlib.gui.itemgroup.InventoryItem;
 import cn.jason31416.planetlib.message.Message;
 import cn.jason31416.planetlib.util.MapTree;
 import cn.jason31416.planetlib.util.PluginLogger;
@@ -25,7 +25,7 @@ public class GUITemplate {
     public int size;
     public int refreshInterval=-1;
     public String base=null;
-    public Map<String, GUI.InventoryItem> inventory = new HashMap<>();
+    public Map<String, InventoryItem> inventory = new HashMap<>();
 
     public static GUI getGUI(String id) {
         GUITemplate template = loadedTemplates.get(id);
@@ -49,7 +49,6 @@ public class GUITemplate {
         GUI gui = new GUI(id, size, name);
         gui.refresh(refreshInterval);
         GUITemplate curBase = this;
-        Map<Integer, Pair<String, GUI.InventoryItem>> inv = new HashMap<>();
         Set<String> usedBases = new HashSet<>();
         Stack<GUITemplate> stack = new Stack<>();
         while(true){
@@ -72,16 +71,7 @@ public class GUITemplate {
         while(!stack.empty()){
             curBase = stack.pop();
             for(String key: curBase.inventory.keySet()) {
-                for(int i: curBase.inventory.get(key).slots){
-                    if(inv.containsKey(i)) {
-                        inv.get(i).second().slots.remove((Integer)i);
-                        if(inv.get(i).second().slots.isEmpty()){
-                            gui.getContent().remove(inv.get(i).first());
-                        }
-                    }
-                    inv.put(i, Pair.of(key, curBase.inventory.get(key)));
-                }
-                gui.getContent().put(key, curBase.inventory.get(key));
+                gui.addItem(key, curBase.inventory.get(key));
             }
         }
         return gui;
@@ -169,7 +159,7 @@ public class GUITemplate {
                     slots.add(i);
                 }
             }
-            GUI.InventoryItem invitem = new GUI.InventoryItem(
+            InventoryItem invitem = new InventoryItem(
                     pair.second(),
                     slots,
                     clickActions.getOrDefault(item, new ArrayList<>())
@@ -209,7 +199,7 @@ public class GUITemplate {
             String availableKeys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // This is enough for a 54-slot inventory already.
             int keyIdx=0;
             for(String key: inventory.keySet()) {
-                GUI.InventoryItem item = inventory.get(key);
+                InventoryItem item = inventory.get(key);
                 MapTree itemTree = new MapTree();
                 itemTree.put("id", key);
 

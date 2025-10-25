@@ -6,7 +6,7 @@
 
     <groupId>cn.jason31416</groupId>
     <artifactId>PlanetLib</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
 
     <build>
         <plugins>
@@ -57,11 +57,11 @@
                     <relocations>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>cn.jason31416.lib.nbtapi</shadedPattern>
+                            <shadedPattern>cn.jason31416.planetlib.lib.nbtapi</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
-                            <shadedPattern>cn.jason31416.lib.folialib</shadedPattern>
+                            <shadedPattern>cn.jason31416.planetlib.lib.folialib</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

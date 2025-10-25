@@ -7,7 +7,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class GUISession {
+public class GUISession {
     @Getter
     private final static Map<SimplePlayer, GUISession> sessions = new HashMap<>();
     @Getter
@@ -22,7 +22,14 @@ public abstract class GUISession {
     public GUISession(SimplePlayer player) {
         this.player = player;
     }
-    public abstract void setup(GUI gui);
+
+    /**
+     * Called when the GUI is first displayed.
+     * Should be overridden by subclasses to set up the GUI if needed.
+     *
+     * @param gui
+     */
+    public void setup(GUI gui){}
 
     @ApiStatus.Internal
     public void close(){

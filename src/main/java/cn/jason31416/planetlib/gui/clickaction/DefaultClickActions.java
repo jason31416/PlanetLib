@@ -20,6 +20,10 @@ public class DefaultClickActions {
     public void closeAction(GUIRunnable.RunnableInvocation invocation, String[] args){
         invocation.getGui().close();
     }
+    @ClickHandler(id="refresh")
+    public void refreshAction(GUIRunnable.RunnableInvocation invocation, String[] args){
+        invocation.getGui().update();
+    }
     @ClickHandler(id="run")
     public void executeCommandAction(GUIRunnable.RunnableInvocation invocation, String[] args){
         String command = String.join(" ", args).replace("%player%", invocation.getGui().getPlayer().getName());
