@@ -25,11 +25,11 @@ public class GUIEventHandler implements Listener {
         Inventory inventory = event.getClickedInventory();
         ItemStack itemStack = event.getCurrentItem();
         SimplePlayer player = SimplePlayer.of((Player) event.getWhoClicked());
-        if(GUISession.getSessions().containsKey(player) && event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY){
-            event.setCancelled(true);
-            return;
-        }
         if(!(inventory.getHolder() instanceof GUI gui)){
+            if(GUISession.getSessions().containsKey(player) && event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY){
+                event.setCancelled(true);
+                return;
+            }
             if (NbtHook.hasTag(itemStack, "plib.guiItem")) {
                 event.getClickedInventory().remove(Objects.requireNonNull(event.getCurrentItem()));
                 StaticMessages.UNKNOWN_GUI_ITEM.sendConsole();

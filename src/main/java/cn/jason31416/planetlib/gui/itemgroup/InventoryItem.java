@@ -77,8 +77,9 @@ public class InventoryItem implements InventoryComponent {
      * Adding a dynamic item modifier that will be called every time the item is refreshed.
      */
     public InventoryItem addItemModifier(Consumer<SimpleItemStack> modifier) {
+        var prevFetcher = stack;
         stack = () -> {
-            SimpleItemStack s = stack.get();
+            SimpleItemStack s = prevFetcher.get();
             modifier.accept(s);
             return s;
         };

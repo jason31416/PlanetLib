@@ -32,11 +32,11 @@ public abstract class RootCommand implements ICommand, IParentCommand {
         PlanetLib.instance.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(name, aliases, new BasicCommand() {
                 @Override
-                public void execute(CommandSourceStack commandSourceStack, String[] args) {
+                public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
                     onCommand(commandSourceStack.getSender(), args);
                 }
                 @Override
-                public Collection<String> suggest(CommandSourceStack commandSourceStack, String[] args){
+                public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args){
                     return onTabComplete(commandSourceStack.getSender(), args);
                 }
             });
@@ -59,13 +59,12 @@ public abstract class RootCommand implements ICommand, IParentCommand {
         }
         return true;
     }
-    @Nullable
+    @NotNull
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull String[] strings){
-        if(strings.length == 0){
-            return List.of();
-        }
         CommandContext context = new CommandContext(Arrays.asList(strings), SimpleSender.of(commandSender), SimplePlayer.of(commandSender), name);
-        return tabComplete(context);
+        List<String> ret = tabComplete(context);
+        if(ret == null) return List.of();
+        return ret;
     }
     public void registerSubCommand(String name, ICommand command){
         subCommands.put(name, command);

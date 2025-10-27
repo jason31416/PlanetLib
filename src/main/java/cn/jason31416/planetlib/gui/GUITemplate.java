@@ -11,6 +11,8 @@ import cn.jason31416.planetlib.util.general.ShitMountainException;
 import cn.jason31416.planetlib.wrapper.SimpleItemStack;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -99,7 +101,7 @@ public class GUITemplate {
             if (item.contains("id")) {
                 itemID = item.getString("id");
             } else {
-                itemID = key;
+                itemID = id+"-"+key;
             }
             if (item.contains("material"))
                 stack.setMaterial(Material.getMaterial(item.getString("material").toUpperCase(Locale.ROOT)));
@@ -180,7 +182,7 @@ public class GUITemplate {
     }
     public static void loadFromDirectory(File directory){
         for(File file: directory.listFiles()){
-            if(file.isFile() && (file.getName().endsWith(".yml")||file.getName().endsWith(".yaml"))){
+            if(file.isFile() && (file.getName().endsWith(".yml"))){
                 loadFromFile(file);
             }
         }
@@ -193,6 +195,8 @@ public class GUITemplate {
             MapTree tree = new MapTree();
             tree.put("name", name.toString())
                     .put("refresh-interval", refreshInterval);
+            if(base!=null)
+                tree.put("base", base);
             String[] shape = new String[size];
             Arrays.fill(shape, "-");
             MapTree items = new MapTree();
@@ -230,9 +234,25 @@ public class GUITemplate {
                 }
                 items.put(itemKey, itemTree.data);
             }
-            tree.put("shape", shape)
+            List<String> shapeList = new ArrayList<>();
+            int cnt=0;
+            StringBuilder sb = new StringBuilder();
+            for(String s: shape){
+                sb.append(s);
+                if((++cnt)%9 == 0){
+                    shapeList.add(sb.toString());
+                    sb = new StringBuilder();
+                }else{
+                    sb.append(" ");
+                }
+            }
+            tree.put("shape", shapeList)
                     .put("items", items.data);
-            fw.write(tree.toYaml());
+            DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            options.setIndent(2);
+            options.setPrettyFlow(true);
+            fw.write(new Yaml(options).dump(tree.data));
         }catch (Exception e){
             throw new ShitMountainException("Failed to save GUI template to file: "+file.getName(), e);
         }

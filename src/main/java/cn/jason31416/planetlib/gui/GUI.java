@@ -15,6 +15,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class GUI implements InventoryHolder {
     /**
      * GUI content mapping
      */
+    @Getter
     private final Map<String, InventoryComponent> content = new HashMap<>();
 
     private final Map<Integer, Pair<String, InventoryComponent>> slotMapping = new HashMap<>();
@@ -115,22 +117,32 @@ public class GUI implements InventoryHolder {
         return slotMapping.get(slot).second();
     }
 
-    public void addItem(String itemId, InventoryComponent item, boolean checkDuplicate){
-        content.put(itemId, item);
-        if(checkDuplicate) {
-            item.getSlots().forEach(slot -> {
-                if (slotMapping.containsKey(slot)) {
-                    slotMapping.get(slot).second().getSlots().remove(slot);
-                    if (slotMapping.get(slot).second().getSlots().isEmpty()) {
-                        content.remove(slotMapping.get(slot).first());
-                    }
+    public void addItem(String itemId, InventoryComponent item){
+        new ArrayList<>(item.getSlots()).forEach(slot -> {
+            if (slotMapping.containsKey(slot)) {
+                slotMapping.get(slot).second().getSlots().remove(slot);
+                if (slotMapping.get(slot).second().getSlots().isEmpty()) {
+                    content.remove(slotMapping.get(slot).first());
                 }
-                slotMapping.put(slot, Pair.of(itemId, item));
-            });
+            }
+            slotMapping.put(slot, Pair.of(itemId, item));
+        });
+        content.put(itemId, item);
+    }
+
+    public void removeItem(String itemId){
+        InventoryComponent item = content.remove(itemId);
+        if(item!= null) {
+            item.getSlots().forEach(slotMapping::remove);
         }
     }
-    public void addItem(String itemId, InventoryComponent item){
-        addItem(itemId, item, true);
+    public void removeItem(int slot){
+        Pair<String, InventoryComponent> pair = slotMapping.remove(slot);
+        if(pair!= null) {
+            pair.second().removeSlot(slot);
+            if(pair.second().getSlots().isEmpty())
+                content.remove(pair.first());
+        }
     }
 
     /**

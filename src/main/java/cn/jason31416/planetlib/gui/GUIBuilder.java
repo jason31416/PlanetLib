@@ -134,8 +134,8 @@ public class GUIBuilder {
                 throw new IllegalArgumentException("No item provider for key: " + shapeArr[i]);
         }
         for(String c: items.keySet()){
-            String id = items.get(c).getId();
-            if(id == null) id = c;
+            String iid = items.get(c).getId();
+            if(iid == null) iid = id+"-"+c;
             List<Integer> slots = new ArrayList<>();
             for (int i = 0; i < shapeArr.length; i++) {
                 if(shapeArr[i].equals("-")) continue;
@@ -143,7 +143,7 @@ public class GUIBuilder {
                     slots.add(i);
                 }
             }
-            ret.addItem(id, items.get(c).build(slots));
+            ret.addItem(iid, items.get(c).build(slots));
         }
         return ret;
     }

@@ -19,6 +19,9 @@ public interface GUIRunnable {
         public SimplePlayer getPlayer(){
             return gui.getPlayer();
         }
+        public int getSlot(){
+            return event.getSlot();
+        }
         public InventoryAction getAction(){
             return event.getAction();
         }

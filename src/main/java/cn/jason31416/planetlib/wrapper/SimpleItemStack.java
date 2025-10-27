@@ -38,8 +38,10 @@ public class SimpleItemStack {
         quantity = stack.getAmount();
         ItemMeta meta = stack.getItemMeta();
         if(meta==null) return this;
-        name=Message.of(meta.displayName());
-        lore=Message.of(meta.getLore());
+        if(meta.hasDisplayName())
+            name=Message.of(meta.displayName());
+        if(meta.hasLore())
+            lore=Message.of(meta.getLore());
         if(meta.getEnchants().size()==1&&meta.getEnchants().getOrDefault(Enchantment.UNBREAKING, 0)==1) glow=true;
         else if(meta.hasEnchants()){
             enchantments = new HashMap<>(meta.getEnchants());
@@ -102,7 +104,8 @@ public class SimpleItemStack {
         ItemStack item = new ItemStack(material, quantity);
         ItemMeta meta = item.getItemMeta();
         if(meta!= null){
-            meta.displayName(name.toComponent());
+            if(!name.toString().isEmpty())
+                meta.displayName(name.toComponent());
             if(lore != null)
                 meta.setLore(lore.asList());
             if(glow){

@@ -19,6 +19,8 @@ public class GUISession {
     @Getter
     private GUI currentGUI;
 
+    private boolean isSwitching = false;
+
     public GUISession(SimplePlayer player) {
         this.player = player;
     }
@@ -31,8 +33,12 @@ public class GUISession {
      */
     public void setup(GUI gui){}
 
+    public void onClose(){}
+
     @ApiStatus.Internal
     public void close(){
+        if(isSwitching) return;
+        onClose();
         sessions.remove(player);
         closed = true;
     }
@@ -40,11 +46,13 @@ public class GUISession {
 //        if(currentGUI != null && currentGUI.getInventory().equals(player.getPlayer().getOpenInventory().getTopInventory())){
 //            currentGUI._closeGUI();
 //        }
+        isSwitching = true;
         sessions.put(player, this);
         setup(gui);
         gui.setSession(this);
         gui.update();
         gui.display();
         currentGUI = gui;
+        isSwitching = false;
     }
 }
