@@ -227,6 +227,18 @@ public class GUITemplate {
                         itemTree.put("skull", stack.skullId);
                     }
                 }
+                List<String> clickList = new ArrayList<>();
+                for(GUIRunnable runnable: item.clickable){
+                    if(runnable instanceof RegisteredGUIRunnable regAction){
+                        if(regAction.args.length>0)
+                            clickList.add(regAction.id+" "+String.join(" ", regAction.args));
+                        else
+                            clickList.add(regAction.id);
+                    }
+                }
+                if(!clickList.isEmpty()){
+                    itemTree.put("click", clickList);
+                }
 
                 String itemKey = ""+availableKeys.charAt(keyIdx++);
                 for(int slot: item.slots){

@@ -105,7 +105,7 @@ public class SimpleItemStack {
         ItemMeta meta = item.getItemMeta();
         if(meta!= null){
             if(!name.toString().isEmpty())
-                meta.displayName(name.toComponent());
+                meta.setDisplayName(name.toString());
             if(lore != null)
                 meta.setLore(lore.asList());
             if(glow){
@@ -116,6 +116,7 @@ public class SimpleItemStack {
                     meta.addEnchant(i, enchantments.get(i), true);
                 }
             }
+            meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP, ItemFlag.HIDE_ATTRIBUTES);
             if(customModelData != -1) meta.setCustomModelData(customModelData);
             if(meta instanceof SkullMeta mt){
                 if(skullId!=null) {
