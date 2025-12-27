@@ -11,6 +11,7 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +23,7 @@ public abstract class RootCommand implements ICommand, IParentCommand {
     @Getter
     public Map<String, ICommand> subCommands = new HashMap<>();
     String name;
+    @Setter
     List<String> aliases = List.of();
     boolean registered=false;
     public RootCommand(String name) {
