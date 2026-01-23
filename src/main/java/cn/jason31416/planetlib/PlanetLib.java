@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib;
 
+import cn.jason31416.planetlib.data.FileDataMap;
 import cn.jason31416.planetlib.gui.GUIEventHandler;
 import cn.jason31416.planetlib.gui.clickaction.DefaultClickActions;
 import cn.jason31416.planetlib.gui.clickaction.RegisteredGUIRunnable;
@@ -11,15 +12,18 @@ import cn.jason31416.planetlib.util.PluginLogger;
 import com.tcoded.folialib.FoliaLib;
 import com.tcoded.folialib.impl.PlatformScheduler;
 import de.tr7zw.changeme.nbtapi.NBT;
+import lombok.Getter;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PlanetLib extends JavaPlugin {
+    @Getter
     public static JavaPlugin instance;
     public static FoliaLib foliaLib;
     public static boolean isPAPIEnabled=false;
@@ -72,5 +76,9 @@ public class PlanetLib extends JavaPlugin {
     }
 
     public static void disable(){
+    }
+
+    public static FileDataMap quickLoad(String fileName){
+        return new FileDataMap(new File(PlanetLib.instance.getDataFolder(), fileName));
     }
 }

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +13,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unchecked")
-public class MapTree {
+public class MapTree implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     public Map<String, Object> data;
     public MapTree(Map<String, Object> data){
         this.data = data;

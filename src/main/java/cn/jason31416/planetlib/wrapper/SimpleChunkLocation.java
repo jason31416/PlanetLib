@@ -1,22 +1,38 @@
 package cn.jason31416.planetlib.wrapper;
 
+import lombok.Getter;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.*;
 
-public record SimpleChunkLocation(int x, int z, SimpleWorld world) implements ConfigurationSerializable {
+public final class SimpleChunkLocation implements ConfigurationSerializable, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    @Getter
+    private final int x;
+    @Getter
+    private final int z;
+    @Getter
+    private final SimpleWorld world;
+
+    public SimpleChunkLocation(int x, int z, SimpleWorld world) {
+        this.x = x;
+        this.z = z;
+        this.world = world;
+    }
+
     public enum Direction {
         EAST,
         WEST,
         NORTH,
         SOUTH
     }
+
     public World getBukkitWorld() {
         return world.getBukkitWorld();
     }
@@ -29,17 +45,18 @@ public record SimpleChunkLocation(int x, int z, SimpleWorld world) implements Co
         return new SimpleChunkLocation(x + dx, z + dz, world);
     }
 
-    public SimpleChunkLocation getRelative(Direction dir){
-        if(dir==Direction.EAST){
+    public SimpleChunkLocation getRelative(Direction dir) {
+        if (dir == Direction.EAST) {
             return getRelative(1, 0);
-        }else if(dir==Direction.WEST){
+        } else if (dir == Direction.WEST) {
             return getRelative(-1, 0);
-        }else if(dir==Direction.SOUTH){
+        } else if (dir == Direction.SOUTH) {
             return getRelative(0, 1);
-        }else{
+        } else {
             return getRelative(0, -1);
         }
     }
+
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
@@ -57,30 +74,34 @@ public record SimpleChunkLocation(int x, int z, SimpleWorld world) implements Co
     public static SimpleChunkLocation of(Chunk chunk) {
         return new SimpleChunkLocation(chunk.getX(), chunk.getZ(), SimpleWorld.of(chunk.getWorld()));
     }
+
     public double distance(SimpleChunkLocation other) {
         double dx = this.x - other.x;
         double dz = this.z - other.z;
         return Math.sqrt(dx * dx + dz * dz);
     }
+
     public Collection<SimpleChunkLocation> getAdjacentChunks() {
         int[] dx = {-1, 0, 1, 0}, dz = {0, -1, 0, 1};
-        Collection<SimpleChunkLocation> result = new java.util.ArrayList<>();
+        Collection<SimpleChunkLocation> result = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             result.add(this.getRelative(dx[i], dz[i]));
         }
         return result;
     }
+
     public Collection<SimpleChunkLocation> getDiagAdjacentChunks() {
         int[] dx = {-1, -1, 1, 1}, dz = {1, -1, 1, -1};
-        Collection<SimpleChunkLocation> result = new java.util.ArrayList<>();
+        Collection<SimpleChunkLocation> result = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             result.add(this.getRelative(dx[i], dz[i]));
         }
         return result;
     }
+
     public Collection<SimpleChunkLocation> getEightAdjacentChunks() {
         int[] dx = {-1, 0, 1, 0, -1, -1, 1, 1}, dz = {0, -1, 0, 1, -1, 1, -1, 1};
-        Collection<SimpleChunkLocation> result = new java.util.ArrayList<>();
+        Collection<SimpleChunkLocation> result = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             result.add(this.getRelative(dx[i], dz[i]));
         }
@@ -111,4 +132,22 @@ public record SimpleChunkLocation(int x, int z, SimpleWorld world) implements Co
         int z = (int) map.get("z");
         return new SimpleChunkLocation(x, z, world);
     }
+
+    public int x() {
+        return x;
+    }
+
+    public int z() {
+        return z;
+    }
+
+    public SimpleWorld world() {
+        return world;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, z, world);
+    }
+
 }

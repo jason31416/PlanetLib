@@ -66,7 +66,7 @@ public class Util {
                         in.close();
                     }
                 } catch (IOException var10) {
-                    PlanetLib.instance.getLogger().log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, var10);
+                    PluginLogger.error("Could not save " + outFile.getName() + " to " + outFile);
                 }
             }
         } else {

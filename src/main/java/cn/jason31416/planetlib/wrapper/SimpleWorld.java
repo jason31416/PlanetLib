@@ -3,10 +3,17 @@ package cn.jason31416.planetlib.wrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
-public final class SimpleWorld {
-    private final World world;
+public final class SimpleWorld implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private transient World world;
     public SimpleWorld(World world) {
         this.world = world;
     }
@@ -43,5 +50,18 @@ public final class SimpleWorld {
     }
     public String toString(){
         return "SimpleWorld("+ getName() + ")";
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeObject(world.getUID());
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        UUID worldUid = (UUID) in.readObject();
+        world = Bukkit.getWorld(worldUid);
     }
 }

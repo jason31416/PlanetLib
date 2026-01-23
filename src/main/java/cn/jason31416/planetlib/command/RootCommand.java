@@ -7,11 +7,9 @@ import cn.jason31416.planetlib.util.general.Pair;
 import cn.jason31416.planetlib.util.general.ShitMountainException;
 import cn.jason31416.planetlib.wrapper.SimplePlayer;
 import cn.jason31416.planetlib.wrapper.SimpleSender;
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,24 +23,25 @@ public abstract class RootCommand implements ICommand, IParentCommand {
     String name;
     @Setter
     List<String> aliases = List.of();
+    @Getter
     boolean registered=false;
     public RootCommand(String name) {
         this.name = name;
     }
     public void register(){
         if(registered) return;
-        PlanetLib.instance.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(name, aliases, new BasicCommand() {
-                @Override
-                public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
-                    onCommand(commandSourceStack.getSender(), args);
-                }
-                @Override
-                public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args){
-                    return onTabComplete(commandSourceStack.getSender(), args);
-                }
-            });
-        });
+        try{
+            Class.forName("io.papermc.paper.command.brigadier.BasicCommand");
+            PaperRootCommandHandler.register(this);
+        }catch (ClassNotFoundException e){
+            var cmd = Bukkit.getPluginCommand(name);
+            if(cmd==null) {
+                PlanetLib.instance.getLogger().warning("Failed to register command "+name+" due to missing entries in plugin.yml!");
+                return;
+            }
+            cmd.setExecutor((v1,v2,v3,v4)->onCommand(v1, v4));
+            cmd.setTabCompleter((v1,v2,v3,v4)->onTabComplete(v1,v4));
+        }
         registered = true;
     }
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull String[] strings) {

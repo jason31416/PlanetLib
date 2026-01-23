@@ -1,70 +1,49 @@
 package cn.jason31416.planetlib.util;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import cn.jason31416.planetlib.PlanetLib;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Config {
-    public static FileConfiguration config;
+    @Getter
+    private static MapTree configTree;
+
     public static void start(JavaPlugin plugin) {
-        config = plugin.getConfig();
-    }
-    public static FileConfiguration getFile(File file) {
-        return YamlConfiguration.loadConfiguration(file);
-    }
-    public static FileConfiguration getConfig() {
-        return config;
+        Util.savePluginResource("config.yml");
+        File config = new File(PlanetLib.getInstance().getDataFolder(), "config.yml");
+
+        try(InputStream inputStream = new FileInputStream(config)) {
+            configTree = new MapTree(new Yaml().load(inputStream));
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Object get(String path) {
-        return config.get(path);
-    }
-    public static Object get(String path, Object def){
-        return config.get(path, def);
-    }
-    public static String getString(String path){
-        return config.getString(path);
-    }
-    public static String getString(String path, String def){
-        return config.getString(path, def);
-    }
-    public static int getInt(String path){
-        return config.getInt(path);
-    }
-    public static int getInt(String path, int def){
-        return config.getInt(path, def);
-    }
-    public static double getDouble(String path){
-        return config.getDouble(path);
-    }
-    public static double getDouble(String path, double def){
-        return config.getDouble(path, def);
-    }
-    public static boolean getBoolean(String path){
-        return config.getBoolean(path);
-    }
-    public static boolean getBoolean(String path, boolean def){
-        return config.getBoolean(path, def);
+    public static Object getItem(String key) {
+        return configTree.get(key);
     }
 
-    public static boolean contains(String path){
-        return config.contains(path);
+    public static MapTree getSection(String key){
+        return configTree.getSection(key);
     }
-    public static Set<String> getKeys(@Nullable String path){
-        if(path == null||path.isEmpty()) {
-            return config.getKeys(false);
-        }
-        ConfigurationSection confSec = config.getConfigurationSection(path);
-        if(confSec == null) {
-            return new HashSet<>();
-        }
-        return confSec.getKeys(false);
+    public static int getInt(String key){
+        return configTree.getInt(key);
+    }
+    public static double getDouble(String key){
+        return configTree.getDouble(key);
+    }
+    public static String getString(String key){
+        return configTree.getString(key);
+    }
+    public static boolean getBoolean(String key){
+        return configTree.getBoolean(key);
+    }
+    public static boolean contains(String key){
+        return configTree.contains(key);
     }
 }
