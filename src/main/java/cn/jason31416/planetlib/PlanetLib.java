@@ -77,8 +77,4 @@ public class PlanetLib extends JavaPlugin {
 
     public static void disable(){
     }
-
-    public static FileDataMap quickLoad(String fileName){
-        return new FileDataMap(new File(PlanetLib.instance.getDataFolder(), fileName));
-    }
 }

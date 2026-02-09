@@ -29,19 +29,27 @@ public abstract class RootCommand implements ICommand, IParentCommand {
         this.name = name;
     }
     public void register(){
+        bukkitRegister();
+    }
+    public void paperRegister(){
         if(registered) return;
         try{
             Class.forName("io.papermc.paper.command.brigadier.BasicCommand");
             PaperRootCommandHandler.register(this);
         }catch (ClassNotFoundException e){
-            var cmd = Bukkit.getPluginCommand(name);
-            if(cmd==null) {
-                PlanetLib.instance.getLogger().warning("Failed to register command "+name+" due to missing entries in plugin.yml!");
-                return;
-            }
-            cmd.setExecutor((v1,v2,v3,v4)->onCommand(v1, v4));
-            cmd.setTabCompleter((v1,v2,v3,v4)->onTabComplete(v1,v4));
+            throw new ShitMountainException("This plugin requires PaperAPI to work!");
         }
+        registered = true;
+    }
+    public void bukkitRegister(){
+        if(registered) return;
+        var cmd = Bukkit.getPluginCommand(name);
+        if(cmd==null) {
+            PlanetLib.instance.getLogger().warning("Failed to register command "+name+" due to missing entries in plugin.yml!");
+            return;
+        }
+        cmd.setExecutor((v1,v2,v3,v4)->onCommand(v1, v4));
+        cmd.setTabCompleter((v1,v2,v3,v4)->onTabComplete(v1,v4));
         registered = true;
     }
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull String[] strings) {

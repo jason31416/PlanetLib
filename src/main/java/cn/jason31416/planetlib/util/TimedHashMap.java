@@ -56,6 +56,7 @@ public class TimedHashMap<K, V> implements Map<K,V> {
 
     @Override
     public V get(Object key) {
+        if(!map.containsKey(key)) {return null;}
         return map.get(key).second();
     }
 

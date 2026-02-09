@@ -21,6 +21,6 @@ public class Lang {
     }
 
     public static MessageList getMessageList(String key){
-        return new MessageList(messageLoader.getList(key, new ArrayList<>()));
+        return messageLoader.getList(key, new ArrayList<>());
     }
 }

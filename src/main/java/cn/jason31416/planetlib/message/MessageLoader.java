@@ -33,8 +33,8 @@ public class MessageLoader {
         if(messageConfig.contains(key)) return messageConfig.getString(key);
         return defaultMessage;
     }
-    public List<String> getList(String key, List<String> defaultList) {
-        if(messageConfig.isList(key)) return messageConfig.getStringList(key);
-        return defaultList;
+    public MessageList getList(String key, List<String> defaultList) {
+        if(messageConfig.isList(key)) return new MessageList(messageConfig.getStringList(key));
+        return new MessageList(defaultList);
     }
 }

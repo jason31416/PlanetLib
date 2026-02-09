@@ -1,5 +1,6 @@
 package cn.jason31416.planetlib.data;
 
+import cn.jason31416.planetlib.PlanetLib;
 import cn.jason31416.planetlib.util.MapTree;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,5 +30,9 @@ public class FileDataMap extends MapTree implements AutoCloseable {
     @Override
     public void close() throws Exception {
         save();
+    }
+
+    public static FileDataMap quickLoad(String fileName){
+        return new FileDataMap(new File(PlanetLib.instance.getDataFolder(), fileName));
     }
 }
