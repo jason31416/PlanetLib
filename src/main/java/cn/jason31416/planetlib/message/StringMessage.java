@@ -92,6 +92,9 @@ public class StringMessage implements Message {
         if(obj instanceof StringMessage){
             return ((StringMessage)obj).content.equals(content);
         }
+        if(obj instanceof String str){
+            return str.equals(content);
+        }
         return false;
     }
 }
