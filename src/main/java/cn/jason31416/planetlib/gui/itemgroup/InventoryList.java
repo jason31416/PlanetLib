@@ -53,6 +53,7 @@ public class InventoryList implements InventoryComponent {
     }
 
     public int getPageCount() {
+        if(listItems.isEmpty()) return 1;
         return (int) Math.ceil((double) listItems.size() / slots.size());
     }
 

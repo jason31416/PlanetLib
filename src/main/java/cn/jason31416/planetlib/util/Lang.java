@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class Lang {
     public static MessageLoader messageLoader;
+    public static String fileName;
 
     public static void init(String fileName){
         Util.savePluginResource(fileName);

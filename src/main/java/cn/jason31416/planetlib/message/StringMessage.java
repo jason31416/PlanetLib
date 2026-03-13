@@ -10,6 +10,27 @@ import org.bukkit.entity.Player;
 public class StringMessage implements Message {
     public static MiniMessage miniMessage;
     String content;
+    private String replaceLegacy(String content){
+        return content.replace("§", "&")
+                .replace("&a", "<green>")
+                .replace("&b", "<aqua>")
+                .replace("&c", "<red>")
+                .replace("&d", "<light_purple>")
+                .replace("&e", "<yellow>")
+                .replace("&f", "<white>")
+                .replace("&1", "<dark_blue>")
+                .replace("&2", "<dark_green>")
+                .replace("&3", "<dark_aqua>")
+                .replace("&4", "<dark_red>")
+                .replace("&5", "<dark_purple>")
+                .replace("&6", "<gold>")
+                .replace("&7", "<gray>")
+                .replace("&8", "<dark_gray>")
+                .replace("&9", "<blue>")
+                .replace("&l", "<bold>")
+                .replace("&r", "<reset>")
+                .replace("&o", "<italic>");
+    }
     public StringMessage(String content) {
         this.content = content
                 .replace("§", "&")
@@ -33,7 +54,16 @@ public class StringMessage implements Message {
                 .replace("&o", "<italic>");
     }
     public StringMessage add(String placeholder, Object value){
-        content = content.replace("%"+placeholder+"%", (value instanceof String)?(String)value:value.toString());
+        String cont;
+        if(value instanceof String) {
+            cont = (String)value;
+        } else if (value instanceof Component component){
+            cont = MiniMessage.miniMessage().serialize(component);
+        } else {
+            cont = value.toString();
+        }
+        cont = replaceLegacy(cont);
+        content = content.replace("%"+placeholder+"%", cont);
         return this;
     }
     public String toString(){

@@ -21,6 +21,64 @@ public class MapTree implements Serializable {
         this.data = new ConcurrentHashMap<>();
     }
 
+    public MapTree merge(MapTree other){
+        // Recursively merge this maptree with the other. If any overlapping key exists, this tree should be prioritized
+        if (other == null || other.data == null) {
+            return this;
+        }
+        mergeMaps(this.data, other.data);
+        return this;
+    }
+
+    private static void mergeMaps(Map<String, Object> target, Map<String, Object> source) {
+        for (Map.Entry<String, Object> entry : source.entrySet()) {
+            String key = entry.getKey();
+            Object sourceValue = entry.getValue();
+
+            if (!target.containsKey(key) || target.get(key) == null) {
+                target.put(key, deepCopyValue(sourceValue));
+                continue;
+            }
+
+            Object targetValue = target.get(key);
+            Map<String, Object> targetMap = asMap(targetValue);
+            Map<String, Object> sourceMap = asMap(sourceValue);
+            if (targetMap != null && sourceMap != null) {
+                mergeMaps(targetMap, sourceMap);
+            }
+        }
+    }
+
+    private static Map<String, Object> asMap(Object value) {
+        if (value instanceof MapTree mapTree) {
+            return mapTree.data;
+        }
+        if (value instanceof Map<?, ?> map) {
+            return (Map<String, Object>) map;
+        }
+        return null;
+    }
+
+    public static Object deepCopyValue(Object value) {
+        if (value instanceof Map<?, ?> mapValue) {
+            Map<String, Object> copied = new ConcurrentHashMap<>();
+            for (Map.Entry<?, ?> entry : mapValue.entrySet()) {
+                copied.put(String.valueOf(entry.getKey()), deepCopyValue(entry.getValue()));
+            }
+            return copied;
+        }
+
+        if (value instanceof List<?> listValue) {
+            List<Object> copied = new ArrayList<>(listValue.size());
+            for (Object item : listValue) {
+                copied.add(deepCopyValue(item));
+            }
+            return copied;
+        }
+
+        return value;
+    }
+
     public MapTree put(String key, Object val){
         try {
             if (key.contains(".")) {
@@ -132,6 +190,9 @@ public class MapTree implements Serializable {
             return (List<String>) value;
         }
         return new ArrayList<>();
+    }
+    public boolean isList(String key){
+        return contains(key) && get(key) instanceof List;
     }
     public Set<String> getKeys(){
         return data.keySet();

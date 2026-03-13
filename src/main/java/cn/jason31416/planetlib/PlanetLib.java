@@ -54,9 +54,6 @@ public class PlanetLib extends JavaPlugin {
 
         RegisteredGUIRunnable.registerAll(new DefaultClickActions());
 
-        plugin.saveDefaultConfig();
-        Config.start(plugin);
-
         foliaLib = new FoliaLib(plugin);
         instance.getServer().getPluginManager().registerEvents(new GUIEventHandler(), plugin);
     }

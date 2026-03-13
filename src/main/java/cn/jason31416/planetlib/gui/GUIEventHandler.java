@@ -7,9 +7,11 @@ import cn.jason31416.planetlib.wrapper.SimplePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
@@ -32,7 +34,7 @@ public class GUIEventHandler implements Listener {
             }
             if (NbtHook.hasTag(itemStack, "plib.guiItem")) {
                 event.getClickedInventory().remove(Objects.requireNonNull(event.getCurrentItem()));
-                StaticMessages.UNKNOWN_GUI_ITEM.sendConsole();
+//                StaticMessages.UNKNOWN_GUI_ITEM.sendConsole();
             }
             return;
         }
@@ -54,5 +56,20 @@ public class GUIEventHandler implements Listener {
             gui._close();
         }
     }
-
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event){
+        if(NbtHook.hasTag(event.getItemInHand(), "plib.guiItem")) {
+            event.getItemInHand().setAmount(0);
+            StaticMessages.UNKNOWN_GUI_ITEM.sendConsole();
+            event.setCancelled(true);
+        }
+    }
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event){
+        if(NbtHook.hasTag(event.getItem(), "plib.guiItem")) {
+            event.getItem().setAmount(0);
+            StaticMessages.UNKNOWN_GUI_ITEM.sendConsole();
+            event.setCancelled(true);
+        }
+    }
 }

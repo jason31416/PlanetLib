@@ -1,23 +1,19 @@
 package cn.jason31416.planetlib.message;
 
-import cn.jason31416.planetlib.PlanetLib;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import cn.jason31416.planetlib.util.MapTree;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.nio.file.Files;
 import java.util.List;
 
 public class MessageLoader {
-    public ConfigurationSection messageConfig;
-    public MessageLoader(ConfigurationSection messageConfig) {
+    public MapTree messageConfig;
+    public MessageLoader(MapTree messageConfig) {
         this.messageConfig = messageConfig;
     }
     public MessageLoader(File filePath) {
         try{
-            this.messageConfig = YamlConfiguration.loadConfiguration(filePath);
+            this.messageConfig = MapTree.fromYaml(Files.readString(filePath.toPath()));
         }catch (Exception ignored){
             throw new RuntimeException("Failed to load message config file!");
         }
