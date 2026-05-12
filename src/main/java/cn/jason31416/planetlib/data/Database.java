@@ -101,7 +101,9 @@ public class Database {
         try (Connection conn = sqlInstance.getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             if (!tableExists(metaData, table.getTableName())) {
-                sqlInstance.execute(sqlInstance.getDialect().createTableSql(table), List.of());
+                try (PreparedStatement stmt = conn.prepareStatement(sqlInstance.getDialect().createTableSql(table))) {
+                    stmt.execute();
+                }
                 return;
             }
 
@@ -109,7 +111,9 @@ public class Database {
             for (Map.Entry<String, DataColumn> entry : table.getColumns().entrySet()) {
                 if (!existingColumns.contains(entry.getKey().toLowerCase(Locale.ROOT))) {
                     String sql = sqlInstance.getDialect().addColumnSql(table.getTableName(), entry.getKey(), entry.getValue());
-                    sqlInstance.execute(sql, List.of());
+                    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                        stmt.execute();
+                    }
                 }
             }
         } catch (SQLException e) {
