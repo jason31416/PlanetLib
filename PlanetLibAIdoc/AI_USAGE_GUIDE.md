@@ -3,6 +3,7 @@
 ## 项目概述
 
 PlanetLib 是一个轻量级的 Java 库，专为 Bukkit 插件开发设计，旨在简化常见任务，包括消息文件、GUI 创建、命令处理等。本指南旨在帮助 AI 理解如何正确使用 PlanetLib 作为依赖库。
+若在使用过程中发现不合理处，请及时询问用户
 
 ## 核心功能模块
 
@@ -107,6 +108,9 @@ public class YourChildCommand extends ChildCommand {
 ```
 
 #### 完整示例：创建多层命令结构
+
+（以下内容也可以分多文件实现）
+
 ```java
 import cn.jason31416.planetlib.command.RootCommand;
 import cn.jason31416.planetlib.command.ParentCommand;

@@ -14,6 +14,17 @@ import java.util.Collection;
 import java.util.List;
 
 public interface Message extends ComponentLike {
+    static void useTheme(MessageTheme theme) {
+        MessageThemeHolder.currentTheme = theme;
+    }
+    static void useTheme(String themeID) {
+        useTheme(MessageTheme.getThemes().get(themeID));
+    }
+
+    static String applyTheme(String text) {
+        return MessageThemeHolder.currentTheme != null ? MessageThemeHolder.currentTheme.applyTheme(text) : text;
+    }
+
     Message add(String key, Object value);
     String toString();
     default String toFormatted(){
@@ -55,4 +66,8 @@ public interface Message extends ComponentLike {
     public static MessageList of(List<String> content){
         return new MessageList(content);
     }
+}
+
+class MessageThemeHolder {
+    static MessageTheme currentTheme = null;
 }

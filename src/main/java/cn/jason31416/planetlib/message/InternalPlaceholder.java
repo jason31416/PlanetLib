@@ -17,6 +17,8 @@ public class InternalPlaceholder {
         for(PlaceholderHandler handler : placeholderHandlers){
             message = handler.replacePlaceholders(message, player);
         }
-        return PlanetLib.isPAPIEnabled?PAPIHook.replace(player, message):message;
+        message = PlanetLib.isPAPIEnabled?PAPIHook.replace(player, message):message;
+        message = Message.applyTheme(message);
+        return message;
     }
 }
