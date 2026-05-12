@@ -11,11 +11,16 @@ import cn.jason31416.planetlib.data.type.DataColumn;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import cn.jason31416.planetlib.data.statement.CompiledSql;
+import cn.jason31416.planetlib.data.statement.SQLStatement;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
@@ -133,6 +139,38 @@ public class Database {
                 .flatMap(TableSchema::primaryKeyColumn)
                 .ifPresent(statement::primaryKey);
         return statement;
+    }
+
+    public int[] executeBatch(List<SQLStatement> statements) {
+        if (statements.isEmpty()) {
+            return new int[0];
+        }
+        try (Connection conn = sqlInstance.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                int[] results = new int[statements.size()];
+                for (int i = 0; i < statements.size(); i++) {
+                    CompiledSql compiled = statements.get(i).compile();
+                    try (PreparedStatement stmt = conn.prepareStatement(compiled.sql())) {
+                        SQLInstance.bindParams(stmt, compiled.params());
+                        results[i] = stmt.executeUpdate();
+                    }
+                }
+                conn.commit();
+                return results;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Batch execution failed, transaction rolled back", e);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to execute batch", e);
+        }
+    }
+
+    public CompletableFuture<int[]> executeBatchAsync(List<SQLStatement> statements) {
+        return CompletableFuture.supplyAsync(() -> executeBatch(statements), sqlInstance.getAsyncExecutor());
     }
 
     private static boolean tableExists(DatabaseMetaData metaData, String tableName) throws SQLException {
