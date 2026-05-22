@@ -2,6 +2,7 @@ package cn.jason31416.planetlib.data;
 
 import cn.jason31416.planetlib.data.statement.DeleteStatement;
 import cn.jason31416.planetlib.data.statement.InsertStatement;
+import cn.jason31416.planetlib.data.statement.RawStatement;
 import cn.jason31416.planetlib.data.statement.SelectStatement;
 import cn.jason31416.planetlib.data.statement.UpdateStatement;
 import cn.jason31416.planetlib.data.statement.UpsertStatement;
@@ -143,6 +144,10 @@ public class Database {
                 .flatMap(TableSchema::primaryKeyColumn)
                 .ifPresent(statement::primaryKey);
         return statement;
+    }
+
+    public RawStatement raw(String sql, List<String> params) {
+        return new RawStatement(sqlInstance, sql, params);
     }
 
     public int[] executeBatch(List<SQLStatement> statements) {

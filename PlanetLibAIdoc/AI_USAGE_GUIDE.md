@@ -425,6 +425,26 @@ mysqlDb.select("player_stats")
     });
 ```
 
+#### 自定义 SQL 语句（RawStatement）
+当内置的 select/insert/update/delete/upsert 构造器无法覆盖复杂 SQL 时，可以使用 `raw` 执行自定义 SQL。SQL 中的 `?` 参数按 `List<String>` 顺序绑定。
+```java
+import java.util.List;
+
+// 自定义查询
+List<String> names = mysqlDb.raw(
+        "SELECT name FROM player_stats WHERE score > ? AND name LIKE ?",
+        List.of("100", "%Jason%")
+    )
+    .query(row -> row.getString("name"));
+
+// 自定义更新/插入/删除
+mysqlDb.raw(
+        "INSERT INTO player_stats (id, name, score) VALUES (?, ?, ?)",
+        List.of("3", "Bob", "95.0")
+    )
+    .executeUpdate();
+```
+
 ### 7. 包装类
 
 #### SimplePlayer（玩家包装类）
